@@ -1,0 +1,34 @@
+# PartnerFinder filter rules — edit freely; the server reloads this on every request.
+
+# HARD requirements. A KNOWN mismatch hides the profile; an UNKNOWN is handled by on_unknown.
+required:
+  age:       { min: 20, max: 23 }
+  height_cm: { min: 150, max: 165 }
+  diet:      ["vegetarian", "vegan"]
+  drinks:    ["no"]          # quote it — unquoted `no` is YAML boolean false
+  smokes:    ["no"]          # quote it — unquoted `no` is YAML boolean false
+
+# SOFT signals — these only BOOST the score, never hide. Optional background information must be
+# explicitly self-declared and must never be inferred from a proxy.
+preferred:
+  community_selfdeclared: []
+  languages: [tamil]          # optional — delete if you don't want to weight mother tongue
+
+# Anything the enrichment flags as a red flag hides the profile.
+banned:
+  red_flags: ["*"]
+
+# What to do when a REQUIRED field is unknown (bios are sparse):
+#   show_flagged = keep it, mark "? field unknown" so you eyeball it   (recommended)
+#   hide         = hide anything not positively confirmed              (empties your feed fast)
+on_unknown: show_flagged
+
+# Score weights — higher = floats to the top of your feed.
+weights:
+  diet: 5
+  drinks: 4
+  smokes: 4
+  height_cm: 3
+  age: 2
+  community_selfdeclared: 6
+  languages: 2
